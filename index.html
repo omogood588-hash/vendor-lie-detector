@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#c8170d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lie Detector">
+<link rel="apple-touch-icon" href="/icon-192.svg">
 <meta http-equiv="Referrer-Policy" content="no-referrer">
 <title>Vendor Lie Detector</title>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1716,6 +1723,15 @@ function resetApp() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+
+// ─── SERVICE WORKER (PWA) ────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // SW registration failed silently — app still works
+    });
+  });
+}
 </script>
 </body>
 </html>
