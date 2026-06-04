@@ -277,21 +277,42 @@ body::before {
   transition: all 0.2s;
 }
 
-.browse-btn {
-  display: inline-block;
-  margin-top: 0.85rem;
-  padding: 0.45rem 1.2rem;
+.drop-zone input[type="file"] {
+  display: block;
+  margin: 1rem auto 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.78rem;
+  color: var(--ink-faded);
+  cursor: pointer;
+  max-width: 260px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 0.4rem 0.6rem;
+}
+
+.drop-zone input[type="file"]::-webkit-file-upload-button {
   background: var(--ink);
   color: var(--paper);
   border: none;
+  padding: 0.35rem 0.9rem;
   font-family: 'Courier Prime', monospace;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: background 0.15s;
+  margin-right: 0.75rem;
 }
 
-.browse-btn:hover { background: var(--red-dark); }
+.drop-zone input[type="file"]::file-selector-button {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 0.35rem 0.9rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  margin-right: 0.75rem;
+}
 
 .drop-zone:hover, .drop-zone.drag-over {
   border-color: var(--ink);
@@ -1079,9 +1100,8 @@ body::before {
           </div>
         </div>
         <div class="drop-label">Attach Contract Document</div>
-        <div class="drop-sub">Drag &amp; drop here, or click below to browse</div>
-        <label class="browse-btn" for="fileInput">Choose PDF file</label>
-        <input type="file" id="fileInput" accept=".pdf" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;" />
+        <div class="drop-sub">Drag &amp; drop a PDF here, or select one below</div>
+        <input type="file" id="fileInput" accept=".pdf" />
       </div>
 
       <div class="file-pill" id="filePill">
@@ -1697,7 +1717,7 @@ function resetApp() {
   hideOptimistic();
   document.getElementById('filePill').classList.remove('show');
   dropZone.style.display = '';
-  document.getElementById('fileInput').value = '';
+  fileInput.value = '';
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('formCard').style.display = '';
   hideError();
