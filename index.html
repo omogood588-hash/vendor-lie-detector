@@ -1072,7 +1072,6 @@ body::before {
         <div class="section-rule-line"></div>
       </div>
 
-      <input type="file" id="fileInput" accept=".pdf" style="display:none" />
       <div class="drop-zone" id="dropZone">
         <div class="drop-icon-box">
           <div class="drop-icon-lines">
@@ -1080,8 +1079,9 @@ body::before {
           </div>
         </div>
         <div class="drop-label">Attach Contract Document</div>
-        <div class="drop-sub">Drag &amp; drop here, or</div>
-        <button type="button" class="browse-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Browse files</button>
+        <div class="drop-sub">Drag &amp; drop here, or click below to browse</div>
+        <label class="browse-btn" for="fileInput">Choose PDF file</label>
+        <input type="file" id="fileInput" accept=".pdf" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;" />
       </div>
 
       <div class="file-pill" id="filePill">
