@@ -287,7 +287,13 @@ body::before {
 }
 
 .drop-zone input[type="file"] {
-  display: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
 }
 
 .drop-icon-box {
@@ -1061,8 +1067,8 @@ body::before {
         <div class="section-rule-line"></div>
       </div>
 
-      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-        <input type="file" id="fileInput" accept=".pdf" style="display:none" />
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".pdf" />
         <div class="drop-icon-box">
           <div class="drop-icon-lines">
             <span></span><span></span><span></span><span></span>
@@ -1166,7 +1172,15 @@ let selectedFile = null;
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 
-fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+// File input — multiple events for cross-browser reliability
+fileInput.addEventListener('change', e => {
+  const f = e.target.files && e.target.files[0];
+  if (f) handleFile(f);
+  // Reset so same file can be re-selected
+  e.target.value = '';
+});
+
+// Drag and drop
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
