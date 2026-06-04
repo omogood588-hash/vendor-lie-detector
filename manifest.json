@@ -1,0 +1,24 @@
+{
+  "name": "Vendor Lie Detector",
+  "short_name": "Lie Detector",
+  "description": "Contract risk analysis \u2014 find the gotchas before you sign.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2a2218",
+  "theme_color": "#c8170d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

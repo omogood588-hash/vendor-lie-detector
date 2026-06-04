@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#c8170d"/>
+  <rect x="16" y="16" width="160" height="160" fill="none" stroke="#f0ebe0" stroke-width="3" opacity="0.4"/>
+  <!-- Document shape -->
+  <rect x="52" y="38" width="88" height="116" fill="#f0ebe0" rx="2"/>
+  <polygon points="116,38 140,62 116,62" fill="#d6cfc0"/>
+  <line x1="116" y1="38" x2="140" y2="62" stroke="#f0ebe0" stroke-width="1"/>
+  <!-- Lines on document -->
+  <rect x="64" y="74" width="64" height="4" fill="#d6cfc0" rx="1"/>
+  <rect x="64" y="86" width="64" height="4" fill="#d6cfc0" rx="1"/>
+  <rect x="64" y="98" width="48" height="4" fill="#d6cfc0" rx="1"/>
+  <!-- Red warning bar -->
+  <rect x="64" y="112" width="64" height="8" fill="#c8170d" rx="1" opacity="0.7"/>
+  <rect x="64" y="126" width="40" height="4" fill="#d6cfc0" rx="1"/>
+</svg>
