@@ -268,20 +268,30 @@ body::before {
 
 /* ─── DROP ZONE ─── */
 .drop-zone {
-  display: block;
   border: 2px dashed var(--rule);
   background: var(--paper-dark);
-  padding: 3rem 2rem;
+  padding: 2.5rem 2rem;
   text-align: center;
-  cursor: pointer;
   position: relative;
   margin-bottom: 1.25rem;
   transition: all 0.2s;
-  user-select: none;
-  -webkit-user-select: none;
-  box-sizing: border-box;
-  width: 100%;
 }
+
+.browse-btn {
+  display: inline-block;
+  margin-top: 0.85rem;
+  padding: 0.45rem 1.2rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.browse-btn:hover { background: var(--red-dark); }
 
 .drop-zone:hover, .drop-zone.drag-over {
   border-color: var(--ink);
@@ -289,13 +299,7 @@ body::before {
   background: var(--paper-darker);
 }
 
-.drop-zone input[type="file"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
+
 
 .drop-icon-box {
   width: 54px; height: 70px;
@@ -1068,16 +1072,17 @@ body::before {
         <div class="section-rule-line"></div>
       </div>
 
-      <label class="drop-zone" id="dropZone" for="fileInput">
-        <input type="file" id="fileInput" accept=".pdf" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
+      <input type="file" id="fileInput" accept=".pdf" style="display:none" />
+      <div class="drop-zone" id="dropZone">
         <div class="drop-icon-box">
           <div class="drop-icon-lines">
             <span></span><span></span><span></span><span></span>
           </div>
         </div>
         <div class="drop-label">Attach Contract Document</div>
-        <div class="drop-sub">Click here to browse &nbsp;— or drag &amp; drop &nbsp;— PDF format only</div>
-      </label>
+        <div class="drop-sub">Drag &amp; drop here, or</div>
+        <button type="button" class="browse-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Browse files</button>
+      </div>
 
       <div class="file-pill" id="filePill">
         <span>📎</span>
@@ -1174,11 +1179,10 @@ const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 
 // File input — multiple events for cross-browser reliability
-fileInput.addEventListener('change', e => {
-  const f = e.target.files && e.target.files[0];
-  if (f) handleFile(f);
-  // Reset so same file can be re-selected
-  e.target.value = '';
+fileInput.addEventListener('change', function() {
+  if (this.files && this.files.length > 0) {
+    handleFile(this.files[0]);
+  }
 });
 
 // Drag and drop
