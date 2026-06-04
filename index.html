@@ -277,20 +277,7 @@ body::before {
   transition: all 0.2s;
 }
 
-.drop-zone input[type="file"] {
-  display: block;
-  margin: 1rem auto 0;
-  font-family: 'Courier Prime', monospace;
-  font-size: 0.78rem;
-  color: var(--ink-faded);
-  cursor: pointer;
-  max-width: 260px;
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  padding: 0.4rem 0.6rem;
-}
-
-.drop-zone input[type="file"]::-webkit-file-upload-button {
+#fileInput::-webkit-file-upload-button {
   background: var(--ink);
   color: var(--paper);
   border: none;
@@ -301,8 +288,7 @@ body::before {
   cursor: pointer;
   margin-right: 0.75rem;
 }
-
-.drop-zone input[type="file"]::file-selector-button {
+#fileInput::file-selector-button {
   background: var(--ink);
   color: var(--paper);
   border: none;
@@ -1101,8 +1087,9 @@ body::before {
         </div>
         <div class="drop-label">Attach Contract Document</div>
         <div class="drop-sub">Drag &amp; drop a PDF here, or select one below</div>
-        <input type="file" id="fileInput" accept=".pdf" />
       </div>
+
+      <input type="file" id="fileInput" accept=".pdf" style="display:block;margin:0 0 1rem;font-family:'Courier Prime',monospace;font-size:0.78rem;color:var(--ink-faded);cursor:pointer;width:100%;background:var(--paper);border:1px solid var(--rule);padding:0.4rem 0.6rem;" />
 
       <div class="file-pill" id="filePill">
         <span>📎</span>
@@ -1227,6 +1214,7 @@ function handleFile(f) {
   document.getElementById('fileName').textContent = f.name;
   document.getElementById('fileSize').textContent = (f.size / 1024).toFixed(0) + ' KB';
   document.getElementById('filePill').classList.add('show');
+  document.getElementById('fileInput').style.display = 'none';
   dropZone.style.display = 'none';
   hideError();
 }
@@ -1718,6 +1706,7 @@ function resetApp() {
   document.getElementById('filePill').classList.remove('show');
   dropZone.style.display = '';
   fileInput.value = '';
+  fileInput.style.display = 'block';
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('formCard').style.display = '';
   hideError();
