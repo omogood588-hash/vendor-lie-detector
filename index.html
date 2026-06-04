@@ -1104,7 +1104,7 @@ body::before {
   <div class="error-box" id="errorBox"></div>
 
       <div class="submit-row">
-        <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
+        <button class="analyze-btn" id="analyzeBtn">
           Submit for Examination →
         </button>
       </div>
@@ -1184,6 +1184,9 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 let selectedFile = null;
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
+
+// Analyze button
+document.getElementById('analyzeBtn').addEventListener('click', analyze);
 
 // File input — multiple events for cross-browser reliability
 fileInput.addEventListener('change', function() {
