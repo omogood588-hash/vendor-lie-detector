@@ -72,18 +72,7 @@ nav {
   text-decoration: none;
 }
 
-.nav-logo-dot {
-  width: 8px; height: 8px;
-  background: var(--red);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--red);
-  animation: pulse 2s ease-in-out infinite;
-}
 
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 6px var(--red); }
-  50%      { box-shadow: 0 0 14px var(--red), 0 0 28px rgba(200,23,13,0.4); }
-}
 
 .nav-links {
   display: flex;
@@ -788,7 +777,15 @@ footer {
 <!-- NAV -->
 <nav role="navigation" aria-label="Main navigation">
   <a href="/" class="nav-logo" aria-label="Vendor Lie Detector home">
-    <div class="nav-logo-dot" aria-hidden="true"></div>
+    <svg width="22" height="28" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="1" y="1" width="20" height="26" fill="#f0ebe0" stroke="#f0ebe0" stroke-width="0.5" rx="1"/>
+      <polygon points="14,1 21,8 14,8" fill="#d6cfc0"/>
+      <line x1="14" y1="1" x2="21" y2="8" stroke="#f0ebe0" stroke-width="0.5"/>
+      <rect x="4" y="11" width="14" height="2" fill="#bfb8aa" rx="0.5"/>
+      <rect x="4" y="15" width="14" height="2" fill="#bfb8aa" rx="0.5"/>
+      <rect x="4" y="19" width="9" height="2" fill="#bfb8aa" rx="0.5"/>
+      <rect x="4" y="22" width="14" height="3" fill="#c8170d" rx="0.5" opacity="0.8"/>
+    </svg>
     Vendor Lie Detector
   </a>
   <div class="nav-links">
@@ -817,7 +814,7 @@ footer {
         <a href="/app.html" class="btn-primary" aria-label="Analyze your first contract for free">Analyze your first contract →</a>
         <a href="#how" class="btn-secondary" aria-label="See how it works">See how it works</a>
       </div>
-      <p class="hero-trust">No sign-up required &nbsp;·&nbsp; 3 free analyses &nbsp;·&nbsp; PDF stays on your device</p>
+      <p class="hero-trust">No sign-up required &nbsp;·&nbsp; 1 free analysis &nbsp;·&nbsp; PDF stays on your device</p>
     </div>
 
     <div class="hero-right" aria-hidden="true">
@@ -927,37 +924,74 @@ footer {
 <section class="pricing" id="pricing" aria-label="Pricing plans">
   <div class="pricing-inner">
     <div class="pricing-eyebrow">Simple pricing</div>
-    <h2 class="pricing-title">3 free analyses.<br>Then $29/month.</h2>
-    <div class="pricing-cards">
+    <h2 class="pricing-title">Start free.<br>Scale when ready.</h2>
+    <div class="pricing-cards" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+
+      <!-- FREE -->
       <div class="pricing-card">
-        <div class="plan-name">Free Trial</div>
+        <div class="plan-name">Free</div>
         <div class="price-amount">$0</div>
-        <span class="price-period">3 analyses · no credit card</span>
-        <p class="plan-desc">Enough to see exactly what you've been signing blindly. No sign-up required.</p>
+        <span class="price-period">1 analysis · no credit card</span>
+        <p class="plan-desc">Try it on a real contract before you commit to anything.</p>
         <ul class="plan-features">
-          <li class="plan-feature">3 contract analyses — ever</li>
-          <li class="plan-feature">Full risk report with findings</li>
-          <li class="plan-feature">Negotiation playbook included</li>
-          <li class="plan-feature">PDF stays on your device</li>
+          <li class="plan-feature">1 free contract analysis</li>
+          <li class="plan-feature">Full risk report</li>
+          <li class="plan-feature">Negotiation playbook</li>
+          <li class="plan-feature">No sign-up required</li>
         </ul>
-        <a href="/app.html" class="plan-btn plan-btn-secondary" aria-label="Start free trial">Use my 3 free analyses →</a>
+        <a href="/app.html" class="plan-btn plan-btn-secondary" aria-label="Try one free analysis">Try it free →</a>
       </div>
+
+      <!-- SINGLE -->
+      <div class="pricing-card">
+        <div class="plan-name">Single</div>
+        <div class="price-amount">$19</div>
+        <span class="price-period">one contract · pay once</span>
+        <p class="plan-desc">Just need one contract reviewed right now? Pay once, no subscription.</p>
+        <ul class="plan-features">
+          <li class="plan-feature">1 contract analysis</li>
+          <li class="plan-feature">Full risk report</li>
+          <li class="plan-feature">Negotiation playbook</li>
+          <li class="plan-feature">No subscription</li>
+        </ul>
+        <a href="/app.html" class="plan-btn plan-btn-secondary" aria-label="Buy single analysis">Buy single review →</a>
+      </div>
+
+      <!-- EARLY ADOPTER -->
       <div class="pricing-card featured">
-        <div class="featured-badge">Most popular</div>
-        <div class="plan-name">Pro</div>
+        <div class="featured-badge">First 15 only</div>
+        <div class="plan-name">Early Adopter</div>
         <div class="price-amount">$29</div>
-        <span class="price-period">per month · cancel anytime</span>
-        <p class="plan-desc">For founders who sign more than one contract a month — which is all of them.</p>
+        <span class="price-period">per month · locked in forever</span>
+        <p class="plan-desc">Founding member price. Lock it in now — this goes away after 15 subscribers.</p>
         <ul class="plan-features">
           <li class="plan-feature">Unlimited contract analyses</li>
+          <li class="plan-feature">Locked-in founding price forever</li>
+          <li class="plan-feature">Full risk reports + playbooks</li>
           <li class="plan-feature">Priority AI processing</li>
-          <li class="plan-feature">Full risk report with findings</li>
-          <li class="plan-feature">Negotiation playbook included</li>
-          <li class="plan-feature">24-hour result caching</li>
-          <li class="plan-feature">Email support</li>
+          <li class="plan-feature">Direct founder support</li>
+          <li class="plan-feature">Vote on new features</li>
         </ul>
-        <a href="/app.html" class="plan-btn plan-btn-primary" aria-label="Start Pro plan">Get Pro — $29/month →</a>
+        <a href="/app.html" class="plan-btn plan-btn-primary" aria-label="Lock in early adopter price">Lock in $29/month →</a>
       </div>
+
+      <!-- PRO -->
+      <div class="pricing-card">
+        <div class="plan-name">Pro</div>
+        <div class="price-amount">$99</div>
+        <span class="price-period">per month · cancel anytime</span>
+        <p class="plan-desc">Ongoing monitoring, unlimited analyses, and priority support for power users.</p>
+        <ul class="plan-features">
+          <li class="plan-feature">Unlimited contract analyses</li>
+          <li class="plan-feature">Ongoing contract monitoring</li>
+          <li class="plan-feature">Priority AI processing</li>
+          <li class="plan-feature">Full risk reports + playbooks</li>
+          <li class="plan-feature">Priority email support</li>
+          <li class="plan-feature">API access (coming soon)</li>
+        </ul>
+        <a href="/app.html" class="plan-btn plan-btn-secondary" aria-label="Get Pro plan">Get Pro — $99/month →</a>
+      </div>
+
     </div>
   </div>
 </section>
@@ -967,7 +1001,7 @@ footer {
   <div class="final-cta-inner">
     <h2>Stop signing <span>blind</span>.</h2>
     <p>The next contract you sign could lock you in for two years, let a vendor raise your price by 20%, and give them rights to your data. Or you could spend 30 seconds finding out first.</p>
-    <a href="/app.html" class="btn-primary" aria-label="Analyze your first contract for free">Analyze your first contract free →</a>
+    <a href="/app.html" class="btn-primary" aria-label="Analyze your first contract for free">Try your first contract free →</a>
   </div>
 </section>
 
