@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Vendor Lie Detector</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #2a2218; font-family: 'DM Sans', sans-serif; padding: 2rem 1rem; }
+.doc { max-width: 720px; margin: 0 auto; background: #f0ebe0; padding: 3rem; box-shadow: 4px 4px 0 rgba(0,0,0,0.3); }
+.back { font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #c8170d; text-decoration: none; letter-spacing: 0.1em; display: block; margin-bottom: 2rem; }
+.back:hover { text-decoration: underline; }
+h1 { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: #1a1510; letter-spacing: 0.02em; line-height: 1; margin-bottom: 0.25rem; }
+.subtitle { font-family: 'Courier Prime', monospace; font-size: 0.72rem; color: #8a8278; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.updated { font-family: 'Courier Prime', monospace; font-size: 0.7rem; color: #bfb8aa; border-top: 1px solid #bfb8aa; border-bottom: 1px solid #bfb8aa; padding: 0.4rem 0; margin-bottom: 2rem; }
+h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.08em; color: #1a1510; margin: 2rem 0 0.6rem; padding-top: 1.5rem; border-top: 1px solid #d6cfc0; }
+p { font-size: 0.88rem; color: #3d3428; line-height: 1.8; margin-bottom: 0.85rem; }
+ul { margin: 0 0 0.85rem 1.25rem; }
+li { font-size: 0.88rem; color: #3d3428; line-height: 1.8; margin-bottom: 0.3rem; }
+.green-box { background: #e8f4ed; border-left: 3px solid #1a6b35; padding: 0.85rem 1rem; margin: 1rem 0; font-size: 0.85rem; color: #1a6b35; line-height: 1.7; }
+.table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.82rem; }
+.table th { background: #1a1510; color: #f0ebe0; font-family: 'Courier Prime', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-align: left; padding: 0.5rem 0.75rem; }
+.table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #d6cfc0; color: #3d3428; vertical-align: top; line-height: 1.6; }
+.table tr:nth-child(even) td { background: #e4ddd0; }
+a { color: #c8170d; }
+</style>
+</head>
+<body>
+<div class="doc" role="main">
+  <a href="/" class="back" aria-label="Back to Vendor Lie Detector">← Back to Vendor Lie Detector</a>
+  <h1>Privacy Policy</h1>
+  <p class="subtitle">VENDOR LIE DETECTOR</p>
+  <p class="updated">Last updated: June 2025</p>
+
+  <div class="green-box">
+    <strong>Short version:</strong> We do not store your contracts. We do not sell your data. We do not track you. We collect the minimum possible to make the service work.
+  </div>
+
+  <h2>What We Collect</h2>
+  <table class="table" aria-label="Data collection summary">
+    <thead>
+      <tr><th>What</th><th>Why</th><th>How long</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Contract text (extracted from your PDF)</td>
+        <td>Sent to our AI provider (Groq) to generate the risk analysis</td>
+        <td>Not stored by us. Groq may retain for up to 30 days per their policy.</td>
+      </tr>
+      <tr>
+        <td>Usage count (stored in your browser only)</td>
+        <td>To enforce the rate limit of 5 analyses per hour</td>
+        <td>Resets every hour. Stored locally on your device only.</td>
+      </tr>
+      <tr>
+        <td>Analysis results (stored in your browser only)</td>
+        <td>Caching so the same contract is not re-analyzed unnecessarily</td>
+        <td>24 hours. Stored locally on your device only. Never sent to our servers.</td>
+      </tr>
+      <tr>
+        <td>Cookie consent preference</td>
+        <td>To remember whether you accepted or declined local storage</td>
+        <td>Stored locally on your device indefinitely until cleared.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>What We Do NOT Collect</h2>
+  <ul>
+    <li>We do not store uploaded PDF files anywhere on our servers</li>
+    <li>We do not collect your name, email, or any personal identifiers</li>
+    <li>We do not use advertising tracking cookies</li>
+    <li>We do not use Google Analytics or any third-party analytics</li>
+    <li>We do not sell, share, or trade your data with any third party</li>
+    <li>We do not build profiles or track you across sessions</li>
+  </ul>
+
+  <h2>How We Use Your Information</h2>
+  <p>The only data that leaves your device is the text extracted from your contract PDF. This text is sent to Groq (our AI provider) via an encrypted HTTPS connection to generate the risk analysis. We do not log this text on our servers.</p>
+
+  <h2>Third Party Services</h2>
+  <p><strong>Groq:</strong> We use Groq's API to power the AI contract analysis. When you submit a contract, the extracted text is sent to Groq's servers. Groq's privacy policy is available at <a href="https://groq.com/privacy-policy" target="_blank" rel="noopener noreferrer">groq.com/privacy-policy</a>.</p>
+  <p><strong>Vercel:</strong> Our website is hosted on Vercel. Vercel may collect standard server logs (IP addresses, request timestamps) as part of normal hosting operations. See <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">vercel.com/legal/privacy-policy</a>.</p>
+  <p><strong>Google Fonts:</strong> We load fonts from Google Fonts. Google may log font requests. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>.</p>
+
+  <h2>Local Storage</h2>
+  <p>If you accept our cookie consent, we store the following in your browser's local storage:</p>
+  <ul>
+    <li>Your usage count (for rate limiting) — resets hourly</li>
+    <li>Cached analysis results — expires after 24 hours</li>
+    <li>Your consent preference</li>
+  </ul>
+  <p>If you decline, we do not store anything except your decline preference. The service still works but rate limiting will not persist across page reloads.</p>
+  <p>You can clear all local storage at any time through your browser settings.</p>
+
+  <h2>Your Rights (GDPR / CCPA)</h2>
+  <p>Since we do not collect personal data, most data rights requests do not apply. However:</p>
+  <ul>
+    <li><strong>Right to erasure:</strong> Clear your browser's local storage to delete all data we have stored on your device.</li>
+    <li><strong>Right to know:</strong> This policy fully describes what we collect.</li>
+    <li><strong>Opt out:</strong> Decline the cookie consent banner to prevent local storage use.</li>
+  </ul>
+
+  <h2>Children's Privacy</h2>
+  <p>This Service is not directed at children under 13. We do not knowingly collect information from children.</p>
+
+  <h2>Changes to This Policy</h2>
+  <p>We may update this Privacy Policy occasionally. The "last updated" date at the top will reflect any changes. Continued use of the Service after changes constitutes acceptance.</p>
+
+  <h2>Contact</h2>
+  <p>For privacy questions or concerns, contact us through our website.</p>
+</div>
+</body>
+</html>
