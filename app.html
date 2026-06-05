@@ -1733,6 +1733,12 @@ ${safeText}`;
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
+      if (res.status === 429) {
+        throw new Error('Server rate limit reached. Please wait an hour before trying again.');
+      }
+      if (res.status === 504) {
+        throw new Error('Request timed out. Please try again.');
+      }
       throw new Error(err?.error || `Server error ${res.status}`);
     }
 
@@ -1866,6 +1872,41 @@ const _origSaveRate = saveRateData;
 saveRateData = function(data) {
   if (window._consentGiven) _origSaveRate(data);
 };
+
+// ─── SENTRY FRONTEND ERROR MONITORING ───────────────────────────────────────
+(function() {
+  const SENTRY_DSN = ''; // Fill in after Sentry setup
+  if (!SENTRY_DSN) return;
+
+  window.onerror = function(msg, src, line, col, err) {
+    try {
+      const url = new URL(SENTRY_DSN);
+      const projectId = url.pathname.replace('/', '');
+      const key = url.username;
+      fetch(`https://sentry.io/api/${projectId}/store/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Sentry-Auth': `Sentry sentry_version=7, sentry_key=${key}, sentry_client=vld-frontend/1.0`
+        },
+        body: JSON.stringify({
+          event_id: Math.random().toString(36).slice(2),
+          timestamp: new Date().toISOString(),
+          platform: 'javascript',
+          level: 'error',
+          message: msg,
+          exception: { values: [{ type: 'Error', value: msg }] },
+          extra: { src, line, col, url: location.href }
+        })
+      }).catch(() => {});
+    } catch {}
+    return false;
+  };
+
+  window.addEventListener('unhandledrejection', e => {
+    window.onerror(e.reason?.message || String(e.reason), '', 0, 0, e.reason);
+  });
+})();
 
 // ─── SERVICE WORKER (PWA) ────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
