@@ -14,6 +14,7 @@
 <meta http-equiv="Referrer-Policy" content="no-referrer">
 <title>Vendor Lie Detector</title>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://js.stripe.com/v3/" async></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -837,6 +838,158 @@ body::before {
 }
 
 
+
+/* ─── UPGRADE MODAL ─── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,21,16,0.85);
+  z-index: 9000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.show { display: flex; }
+
+.modal {
+  background: var(--paper);
+  max-width: 560px;
+  width: 100%;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
+  animation: fadeUp 0.3s ease forwards;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1.25rem;
+  background: none;
+  border: none;
+  font-family: 'Courier Prime', monospace;
+  font-size: 1.2rem;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--ink); }
+
+.modal-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+
+.modal-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.modal-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.modal-plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--rule);
+  background: var(--paper-dark);
+  cursor: pointer;
+  transition: all 0.15s;
+  gap: 1rem;
+}
+
+.modal-plan:hover { border-color: var(--ink); background: var(--paper-darker); }
+.modal-plan.featured-plan { border-color: var(--red); background: var(--red-pale); }
+
+.modal-plan-info { flex: 1; }
+.modal-plan-name {
+  font-family: 'Special Elite', serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+}
+.modal-plan-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+.modal-plan-badge {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--red);
+  border: 1px solid var(--red);
+  padding: 0.15rem 0.5rem;
+  white-space: nowrap;
+}
+
+.modal-plan-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.modal-plan-period {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.58rem;
+  color: var(--muted);
+  display: block;
+  text-align: right;
+}
+
+.modal-note {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.modal-loading {
+  text-align: center;
+  padding: 1rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+  display: none;
+}
+.modal-loading.show { display: block; }
+
+/* success banner */
+.success-banner {
+  display: none;
+  background: var(--green-pale);
+  border-left: 3px solid var(--green);
+  padding: 0.85rem 1rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.78rem;
+  color: var(--green);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.success-banner.show { display: block; }
+
 /* ─── SKELETON LOADERS ─── */
 @keyframes shimmer {
   0%   { background-position: -600px 0; }
@@ -1280,6 +1433,53 @@ body::before {
       </div>
     </div>
 
+
+    <!-- UPGRADE MODAL -->
+    <div class="modal-overlay" id="upgradeModal" role="dialog" aria-modal="true" aria-label="Upgrade plan">
+      <div class="modal">
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+        <div class="modal-eyebrow">Free analysis used</div>
+        <h2 class="modal-title">Unlock unlimited analyses</h2>
+        <p class="modal-sub">You've used your free analysis. Choose a plan to keep going — or pay once for a single contract.</p>
+        <div class="success-banner" id="successBanner"></div>
+        <div class="modal-plans" id="modalPlans">
+          <div class="modal-plan" onclick="checkout('single')" role="button" tabindex="0" aria-label="Buy single review for $19">
+            <div class="modal-plan-info">
+              <div class="modal-plan-name">Single Review</div>
+              <div class="modal-plan-desc">One contract, analyzed now. Pay once, no subscription.</div>
+            </div>
+            <div>
+              <div class="modal-plan-price">$19</div>
+              <span class="modal-plan-period">one time</span>
+            </div>
+          </div>
+          <div class="modal-plan featured-plan" onclick="checkout('early_adopter')" role="button" tabindex="0" aria-label="Lock in Early Adopter plan for $29 per month">
+            <div class="modal-plan-info">
+              <div class="modal-plan-name">Early Adopter</div>
+              <div class="modal-plan-desc">Unlimited analyses. Founding price — locked in forever. First 15 only.</div>
+              <span class="modal-plan-badge">FIRST 15 ONLY</span>
+            </div>
+            <div>
+              <div class="modal-plan-price">$29</div>
+              <span class="modal-plan-period">per month</span>
+            </div>
+          </div>
+          <div class="modal-plan" onclick="checkout('pro')" role="button" tabindex="0" aria-label="Get Pro plan for $99 per month">
+            <div class="modal-plan-info">
+              <div class="modal-plan-name">Pro</div>
+              <div class="modal-plan-desc">Unlimited analyses + ongoing monitoring + priority support.</div>
+            </div>
+            <div>
+              <div class="modal-plan-price">$99</div>
+              <span class="modal-plan-period">per month</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-loading" id="modalLoading">Redirecting to checkout<span class="dots"></span></div>
+        <p class="modal-note">Secured by Stripe · Cancel anytime · Instant access after payment</p>
+      </div>
+    </div>
+
 </div><!-- /document -->
 
 <script>
@@ -1469,6 +1669,96 @@ function renderReport(data, contractName, fromCache = false) {
 }
 
 
+
+// ─── AUTH / STRIPE ────────────────────────────────────────────────────────────
+const TOKEN_KEY = 'vld_token';
+
+function getToken() {
+  try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; }
+}
+
+function saveToken(token) {
+  try { localStorage.setItem(TOKEN_KEY, token); } catch {}
+}
+
+function isTokenValid() {
+  const token = getToken();
+  if (!token) return false;
+  try {
+    const [encoded] = token.split('.');
+    const payload = JSON.parse(atob(encoded));
+    return payload.exp > Date.now() && payload.paid;
+  } catch { return false; }
+}
+
+function openModal() {
+  document.getElementById('upgradeModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('upgradeModal').classList.remove('show');
+}
+
+// Close modal on overlay click
+document.getElementById('upgradeModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('upgradeModal')) closeModal();
+});
+
+async function checkout(plan) {
+  document.getElementById('modalPlans').style.display = 'none';
+  document.getElementById('modalLoading').classList.add('show');
+
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Checkout failed');
+    }
+  } catch (e) {
+    document.getElementById('modalPlans').style.display = '';
+    document.getElementById('modalLoading').classList.remove('show');
+    showError('Checkout failed: ' + e.message);
+  }
+}
+
+// Handle return from Stripe
+async function handlePaymentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const payment = params.get('payment');
+  const sessionId = params.get('session_id');
+
+  if (payment === 'success' && sessionId) {
+    try {
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+      });
+      const data = await res.json();
+      if (data.token) {
+        saveToken(data.token);
+        const banner = document.getElementById('successBanner');
+        if (banner) {
+          banner.textContent = `✓ Payment confirmed — you now have ${data.plan === 'single' ? '1 analysis' : 'unlimited analyses'}. Welcome aboard.`;
+          banner.classList.add('show');
+          openModal();
+          setTimeout(() => closeModal(), 4000);
+        }
+      }
+    } catch {}
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+  } else if (payment === 'cancelled') {
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+
 // ─── ANALYSIS CACHE ──────────────────────────────────────────────────────────
 const CACHE_PREFIX  = 'vld_cache_';
 const CACHE_MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
@@ -1532,7 +1822,7 @@ function hideOptimistic() {
 
 // ─── SECURITY & RATE LIMITING ───────────────────────────────────────────────
 
-const RATE_LIMIT   = 5;
+const RATE_LIMIT   = 1; // 1 free analysis
 const RATE_WINDOW  = 60 * 60 * 1000;
 const RATE_KEY     = 'vld_usage';
 const MAX_FILE_MB  = 5;
@@ -1634,6 +1924,7 @@ function hideRateBanner() {
 window.addEventListener('DOMContentLoaded', () => {
   initConsent();
   if (isRateLimited()) showRateBanner();
+  handlePaymentReturn();
 });
 
 // ─── ANALYZE (hardened) ───────────────────────────────────────────────────────
@@ -1725,16 +2016,25 @@ CONTRACT TEXT:
 ${safeText}`;
 
   try {
+    const token = getToken();
     const res = await fetch('/api/analyze', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'x-auth-token': token } : {})
+      },
       body: JSON.stringify({ prompt })
     });
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      if (res.status === 429) {
-        throw new Error('Server rate limit reached. Please wait an hour before trying again.');
+      if (res.status === 429 || err.upgrade) {
+        hideSkeleton(); hideOptimistic();
+        document.getElementById('formCard').style.display = '';
+        document.getElementById('analyzeBtn').disabled = false;
+        document.getElementById('loading').classList.remove('show');
+        openModal();
+        return;
       }
       if (res.status === 504) {
         throw new Error('Request timed out. Please try again.');
