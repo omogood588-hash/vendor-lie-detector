@@ -2,8 +2,8 @@
 // Vercel serverless functions are stateless but this works well enough
 // for limiting bursts — the map resets when the function cold-starts
 const ipMap = new Map();
-const IP_LIMIT  = 10;               // max requests
-const IP_WINDOW = 60 * 60 * 1000;  // per hour (ms)
+const IP_LIMIT  = 1;                // 1 free analysis per IP per day
+const IP_WINDOW = 24 * 60 * 60 * 1000; // per day (ms)
 
 function isIPRateLimited(ip) {
   const now = Date.now();
@@ -87,6 +87,36 @@ export default async function handler(req, res) {
     return res.status(429).json({
       error: 'Too many requests from your IP. Please wait an hour before trying again.'
     });
+  }
+
+  // ─── TOKEN / AUTH CHECK ─────────────────────────────────────────────────────
+  const TOKEN_SECRET = process.env.TOKEN_SECRET;
+  const authHeader   = req.headers['x-auth-token'] || '';
+  let   userPlan     = 'free';
+  let   tokenValid   = false;
+
+  if (authHeader && TOKEN_SECRET) {
+    try {
+      const [encoded, sig] = authHeader.split('.');
+      const expectedSig = Buffer.from(TOKEN_SECRET + encoded).toString('base64').slice(0, 32);
+      if (sig === expectedSig) {
+        const payload = JSON.parse(Buffer.from(encoded, 'base64').toString());
+        if (payload.exp > Date.now() && payload.paid) {
+          userPlan   = payload.plan || 'paid';
+          tokenValid = true;
+        }
+      }
+    } catch {}
+  }
+
+  // Free tier — one analysis per IP per day (server-side enforcement)
+  if (!tokenValid) {
+    if (isIPRateLimited(ip)) {
+      return res.status(429).json({
+        error: 'Free analysis used. Please upgrade to continue.',
+        upgrade: true
+      });
+    }
   }
 
   // API key check
