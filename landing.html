@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Vendor Lie Detector — AI contract analysis for startup founders. Find auto-renewal traps, price hike clauses, and data ownership issues before you sign.">
+<meta name="theme-color" content="#c8170d">
+<title>Vendor Lie Detector — Read the Fine Print. Find the Lies.</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f0ebe0;
+  --paper-dark: #e4ddd0;
+  --paper-darker: #d6cfc0;
+  --ink: #1a1510;
+  --ink-faded: #3d3428;
+  --red: #c8170d;
+  --red-dark: #9e1209;
+  --red-pale: #faeae8;
+  --amber: #c47d0e;
+  --green: #1a6b35;
+  --green-pale: #e8f4ed;
+  --rule: #bfb8aa;
+  --muted: #8a8278;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #2a2218;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
+              repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.01) 40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(26,21,16,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(240,235,224,0.08);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.nav-logo-dot {
+  width: 8px; height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--red);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 6px var(--red); }
+  50%      { box-shadow: 0 0 14px var(--red), 0 0 28px rgba(200,23,13,0.4); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rule);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: var(--paper); }
+
+.nav-cta {
+  background: var(--red) !important;
+  color: #fff !important;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.72rem !important;
+}
+
+.nav-cta:hover { background: var(--red-dark) !important; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 4rem;
+  overflow: hidden;
+}
+
+/* Giant document watermark behind hero */
+.hero-watermark {
+  position: absolute;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(180px, 22vw, 300px);
+  line-height: 1;
+  color: rgba(240,235,224,0.03);
+  letter-spacing: -0.02em;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.hero-inner {
+  max-width: 900px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.hero-left {}
+
+.hero-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--red);
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: var(--paper);
+  margin-bottom: 1.5rem;
+}
+
+h1 .red { color: var(--red); }
+h1 .underline {
+  position: relative;
+  display: inline-block;
+}
+h1 .underline::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  height: 4px;
+  background: var(--red);
+  opacity: 0.6;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: #9e9488;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  max-width: 400px;
+}
+
+.hero-sub strong { color: var(--paper); font-weight: 500; }
+
+.hero-btns {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: var(--red);
+  color: #fff;
+  padding: 0.9rem 2rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.3);
+}
+
+.btn-primary:hover {
+  background: var(--red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200,23,13,0.35);
+}
+
+.btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: var(--rule);
+  padding: 0.9rem 2rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border: 1px solid rgba(191,184,170,0.3);
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover { border-color: var(--rule); color: var(--paper); }
+
+.hero-trust {
+  margin-top: 1.75rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #5a5248;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-trust::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: #5a5248;
+}
+
+/* ── HERO DOCUMENT CARD ── */
+.hero-right { position: relative; }
+
+.doc-card {
+  background: var(--paper);
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.4), 16px 16px 0 rgba(0,0,0,0.2);
+  padding: 2rem;
+  transform: rotate(2deg);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.doc-card:hover { transform: rotate(1deg) scale(1.02); }
+
+.doc-card-stamp {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  border: 3px solid var(--red);
+  padding: 0.3rem 0.6rem;
+  transform: rotate(12deg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--red);
+  opacity: 0.85;
+}
+
+.doc-card-title {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.doc-card-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+  line-height: 1.1;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.75rem;
+}
+
+.score-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.score-big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--red);
+  letter-spacing: -0.02em;
+}
+
+.score-label-col { flex: 1; }
+.score-label-col p { font-family: 'Special Elite', serif; font-size: 0.78rem; color: var(--ink-faded); line-height: 1.5; }
+.score-label-col strong { color: var(--red); }
+
+.doc-findings { display: flex; flex-direction: column; gap: 6px; }
+
+.doc-finding {
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--rule);
+  background: var(--paper-dark);
+  font-size: 0.75rem;
+}
+
+.doc-finding.high   { border-left-color: var(--red);   background: var(--red-pale); }
+.doc-finding.medium { border-left-color: var(--amber);  background: #fdf3e0; }
+.doc-finding.low    { border-left-color: var(--green);  background: var(--green-pale); }
+
+.doc-finding-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+
+.high   .doc-finding-label { color: var(--red); }
+.medium .doc-finding-label { color: var(--amber); }
+.low    .doc-finding-label { color: var(--green); }
+
+.doc-finding-text { color: var(--ink-faded); font-family: 'DM Sans', sans-serif; font-size: 0.75rem; line-height: 1.5; }
+
+/* floating second card */
+.doc-card-bg {
+  position: absolute;
+  top: 20px; left: -20px;
+  width: 100%; height: 100%;
+  background: var(--paper-darker);
+  transform: rotate(-3deg);
+  z-index: -1;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+}
+
+/* ── SECTION: HOW IT WORKS ── */
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+}
+
+.section-inner { max-width: 900px; margin: 0 auto; }
+
+.section-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--paper);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  margin-bottom: 3.5rem;
+}
+
+/* steps */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(191,184,170,0.1);
+  border: 1px solid rgba(191,184,170,0.1);
+}
+
+.step {
+  background: rgba(26,21,16,0.6);
+  padding: 2.5rem 2rem;
+  position: relative;
+}
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: rgba(240,235,224,0.06);
+  position: absolute;
+  top: 1rem; right: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.step-icon {
+  width: 44px; height: 44px;
+  background: var(--red-pale);
+  border: 1.5px solid rgba(200,23,13,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.step h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  color: var(--paper);
+  margin-bottom: 0.6rem;
+}
+
+.step p {
+  font-size: 0.85rem;
+  color: #7a7268;
+  line-height: 1.75;
+}
+
+/* ── WHAT WE CATCH ── */
+.catches {
+  background: var(--paper);
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+}
+
+.catches-inner { max-width: 900px; margin: 0 auto; }
+
+.catches-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.75rem;
+}
+
+.catches-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--ink);
+  line-height: 0.95;
+  margin-bottom: 3rem;
+}
+
+.catches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.catch-item {
+  background: var(--paper);
+  padding: 1.75rem;
+  transition: background 0.2s;
+}
+
+.catch-item:hover { background: var(--paper-dark); }
+
+.catch-severity {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.catch-severity.high   { color: var(--red);   border-color: var(--red);   background: var(--red-pale); }
+.catch-severity.medium { color: var(--amber);  border-color: var(--amber); background: #fdf3e0; }
+.catch-severity.low    { color: var(--green);  border-color: var(--green); background: var(--green-pale); }
+
+.catch-item h3 {
+  font-family: 'Special Elite', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.catch-item p {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── PRICING ── */
+.pricing {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+}
+
+.pricing-inner { max-width: 860px; margin: 0 auto; }
+
+.pricing-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.75rem;
+}
+
+.pricing-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--paper);
+  line-height: 0.95;
+  margin-bottom: 3rem;
+}
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(191,184,170,0.15);
+}
+
+.pricing-card {
+  background: rgba(26,21,16,0.7);
+  padding: 2.5rem;
+  position: relative;
+}
+
+.pricing-card.featured {
+  background: var(--paper);
+}
+
+.pricing-card.featured .price-amount { color: var(--ink); }
+.pricing-card.featured .price-period { color: var(--muted); }
+.pricing-card.featured .plan-name { color: var(--ink); }
+.pricing-card.featured .plan-desc { color: var(--muted); }
+.pricing-card.featured .plan-feature { color: var(--ink-faded); border-color: var(--rule); }
+.pricing-card.featured .plan-feature::before { color: var(--green); }
+
+.featured-badge {
+  position: absolute;
+  top: -1px; right: 2rem;
+  background: var(--red);
+  color: #fff;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+}
+
+.plan-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--paper);
+  margin-bottom: 1rem;
+}
+
+.price-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.price-period {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: var(--rule);
+  letter-spacing: 0.08em;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.plan-desc {
+  font-size: 0.82rem;
+  color: #7a7268;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(191,184,170,0.15);
+}
+
+.plan-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.plan-feature {
+  font-size: 0.82rem;
+  color: #7a7268;
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 0.5px solid rgba(191,184,170,0.08);
+  padding-bottom: 0.6rem;
+}
+
+.plan-feature::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--rule);
+  font-size: 0.75rem;
+}
+
+.plan-btn {
+  display: block;
+  text-align: center;
+  padding: 0.85rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.plan-btn-primary {
+  background: var(--red);
+  color: #fff;
+}
+
+.plan-btn-primary:hover {
+  background: var(--red-dark);
+  box-shadow: 0 4px 16px rgba(200,23,13,0.3);
+}
+
+.plan-btn-secondary {
+  background: transparent;
+  color: var(--rule);
+  border: 1px solid rgba(191,184,170,0.2);
+}
+
+.plan-btn-secondary:hover { border-color: var(--rule); color: var(--paper); }
+
+/* ── FINAL CTA ── */
+.final-cta {
+  background: var(--paper);
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.final-cta::before {
+  content: 'SIGN NOTHING BLINDLY';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(60px, 10vw, 120px);
+  color: rgba(26,21,16,0.03);
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.final-cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+
+.final-cta h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: var(--ink);
+  line-height: 0.95;
+  margin-bottom: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.final-cta h2 span { color: var(--red); }
+
+.final-cta p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+  border-top: 3px solid var(--red);
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--paper);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rule);
+  text-decoration: none;
+}
+
+.footer-links a:hover { color: var(--paper); }
+
+.footer-copy {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.62rem;
+  color: #5a5248;
+  letter-spacing: 0.06em;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  nav { padding: 1rem; }
+  .nav-links { display: none; }
+
+  .hero { padding: 7rem 1.5rem 3rem; }
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero-watermark { display: none; }
+  .hero-sub { max-width: 100%; }
+
+  .steps { grid-template-columns: 1fr; }
+
+  .pricing-cards { grid-template-columns: 1fr; }
+
+  footer { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav role="navigation" aria-label="Main navigation">
+  <a href="/" class="nav-logo" aria-label="Vendor Lie Detector home">
+    <div class="nav-logo-dot" aria-hidden="true"></div>
+    Vendor Lie Detector
+  </a>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#catches">What we catch</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/index.html" class="nav-cta">Try it free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" aria-label="Hero section">
+  <div class="hero-watermark" aria-hidden="true">CONTRACT</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">AI Contract Analysis</div>
+      <h1>
+        Read the<br>
+        fine print.<br>
+        Find the <span class="red underline">lies</span>.
+      </h1>
+      <p class="hero-sub">
+        Startup founders sign <strong>dozens of vendor contracts</strong> a year. Every one is full of auto-renewal traps, price hike clauses, and data ownership gotchas. We find them all — <strong>in 30 seconds</strong>.
+      </p>
+      <div class="hero-btns">
+        <a href="/index.html" class="btn-primary" aria-label="Analyze your first contract for free">Analyze your first contract →</a>
+        <a href="#how" class="btn-secondary" aria-label="See how it works">See how it works</a>
+      </div>
+      <p class="hero-trust">No sign-up required &nbsp;·&nbsp; First analysis free &nbsp;·&nbsp; PDF stays on your device</p>
+    </div>
+
+    <div class="hero-right" aria-hidden="true">
+      <div class="doc-card-bg"></div>
+      <div class="doc-card" role="img" aria-label="Example contract risk analysis showing a score of 8 out of 10">
+        <div class="doc-card-stamp">DANGER</div>
+        <div class="doc-card-title">Risk Analysis Report · VLD-001</div>
+        <div class="doc-card-name">Acme SaaS Master Services Agreement</div>
+        <div class="score-display">
+          <div class="score-big">8</div>
+          <div class="score-label-col">
+            <p><strong>HIGH RISK</strong><br>This contract contains 4 clauses that require immediate attention before signing.</p>
+          </div>
+        </div>
+        <div class="doc-findings">
+          <div class="doc-finding high">
+            <div class="doc-finding-label">High Risk</div>
+            <div class="doc-finding-text">Auto-renews for 12 months with only 15 days cancellation window</div>
+          </div>
+          <div class="doc-finding high">
+            <div class="doc-finding-label">High Risk</div>
+            <div class="doc-finding-text">Vendor can raise prices up to 20% annually without consent</div>
+          </div>
+          <div class="doc-finding medium">
+            <div class="doc-finding-label">Medium Risk</div>
+            <div class="doc-finding-text">Your data may be used to train AI models unless opted out</div>
+          </div>
+          <div class="doc-finding low">
+            <div class="doc-finding-label">Low Risk</div>
+            <div class="doc-finding-text">Uptime SLA credits capped at 5% of monthly fees</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how" aria-label="How it works">
+  <div class="section-inner">
+    <div class="section-eyebrow">The process</div>
+    <h2 class="section-title">Three steps.<br>Thirty seconds.</h2>
+    <div class="steps" role="list">
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">01</div>
+        <div class="step-icon" aria-hidden="true">📄</div>
+        <h3>Upload your contract</h3>
+        <p>Drag and drop any vendor or SaaS contract PDF. Your document never leaves your device — only the text is analyzed.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">02</div>
+        <div class="step-icon" aria-hidden="true">🔍</div>
+        <h3>AI reads every clause</h3>
+        <p>Our AI scans the entire contract for auto-renewal traps, price hike clauses, data ownership issues, weak SLAs, and more.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">03</div>
+        <div class="step-icon" aria-hidden="true">⚠️</div>
+        <h3>Get your risk report</h3>
+        <p>Receive a plain-English breakdown of every risk, color-coded by severity, plus a negotiation playbook to push back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE CATCH -->
+<section class="catches" id="catches" aria-label="What we catch">
+  <div class="catches-inner">
+    <div class="catches-eyebrow">What we flag</div>
+    <h2 class="catches-title">Every trap.<br>Every trick.</h2>
+    <div class="catches-grid" role="list">
+      <div class="catch-item" role="listitem">
+        <span class="catch-severity high">High Risk</span>
+        <h3>Auto-renewal traps</h3>
+        <p>Contracts that silently renew for 12 months unless you cancel within a tiny window — often buried on page 14.</p>
+      </div>
+      <div class="catch-item" role="listitem">
+        <span class="catch-severity high">High Risk</span>
+        <h3>Price increase clauses</h3>
+        <p>Vendors who can raise your price by 20% annually with no consent required. You agreed to this on page 3.</p>
+      </div>
+      <div class="catch-item" role="listitem">
+        <span class="catch-severity high">High Risk</span>
+        <h3>Data ownership issues</h3>
+        <p>Who owns your data when you leave? Can they sell it? Use it to train AI? The answer is usually buried in section 11.</p>
+      </div>
+      <div class="catch-item" role="listitem">
+        <span class="catch-severity medium">Medium Risk</span>
+        <h3>Weak uptime SLAs</h3>
+        <p>99.9% uptime sounds great until you read the credits are capped at 5% of your monthly bill and take 60 days to process.</p>
+      </div>
+      <div class="catch-item" role="listitem">
+        <span class="catch-severity medium">Medium Risk</span>
+        <h3>Indemnification bombs</h3>
+        <p>Clauses that make you responsible for the vendor's legal costs if their service causes harm to a third party.</p>
+      </div>
+      <div class="catch-item" role="listitem">
+        <span class="catch-severity medium">Medium Risk</span>
+        <h3>Cancellation traps</h3>
+        <p>90-day written notice requirements, specific cancellation methods, and fees for early termination hiding in plain sight.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing" aria-label="Pricing plans">
+  <div class="pricing-inner">
+    <div class="pricing-eyebrow">Simple pricing</div>
+    <h2 class="pricing-title">Cheaper than<br>one lawyer hour.</h2>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <div class="plan-name">Free</div>
+        <div class="price-amount">$0</div>
+        <span class="price-period">forever</span>
+        <p class="plan-desc">Try it before you commit. No credit card, no sign-up.</p>
+        <ul class="plan-features">
+          <li class="plan-feature">1 contract analysis per hour</li>
+          <li class="plan-feature">Full risk report with findings</li>
+          <li class="plan-feature">Negotiation playbook included</li>
+          <li class="plan-feature">PDF stays on your device</li>
+        </ul>
+        <a href="/index.html" class="plan-btn plan-btn-secondary" aria-label="Start using the free plan">Start free →</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="price-amount">$29</div>
+        <span class="price-period">per month · cancel anytime</span>
+        <p class="plan-desc">For founders who sign more than one contract a month.</p>
+        <ul class="plan-features">
+          <li class="plan-feature">Unlimited contract analyses</li>
+          <li class="plan-feature">Priority AI processing</li>
+          <li class="plan-feature">Full risk report with findings</li>
+          <li class="plan-feature">Negotiation playbook included</li>
+          <li class="plan-feature">24-hour result caching</li>
+          <li class="plan-feature">Email support</li>
+        </ul>
+        <a href="/index.html" class="plan-btn plan-btn-primary" aria-label="Start Pro plan">Get Pro — $29/month →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" aria-label="Call to action">
+  <div class="final-cta-inner">
+    <h2>Stop signing <span>blind</span>.</h2>
+    <p>The next contract you sign could lock you in for two years, let a vendor raise your price by 20%, and give them rights to your data. Or you could spend 30 seconds finding out first.</p>
+    <a href="/index.html" class="btn-primary" aria-label="Analyze your first contract for free">Analyze your first contract free →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <div class="footer-logo">Vendor Lie Detector</div>
+  <div class="footer-links">
+    <a href="/index.html">App</a>
+    <a href="/tos.html">Terms</a>
+    <a href="/privacy.html">Privacy</a>
+  </div>
+  <div class="footer-copy">Not legal advice &nbsp;·&nbsp; © 2025</div>
+</footer>
+
+</body>
+</html>
