@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="/icon-192.svg">
 <meta http-equiv="Referrer-Policy" content="no-referrer">
 <title>Vendor Lie Detector</title>
-<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" crossorigin="anonymous"></script>
 <script src="https://js.stripe.com/v3/" async></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1483,7 +1483,18 @@ body::before {
 </div><!-- /document -->
 
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+// Use blob worker to bypass Edge tracking prevention
+(async function() {
+  try {
+    const workerUrl = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    const res = await fetch(workerUrl);
+    const blob = await res.blob();
+    pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
+  } catch {
+    // fallback
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+  }
+})();
 
 let selectedFile = null;
 const dropZone = document.getElementById('dropZone');
@@ -2154,8 +2165,7 @@ async function extractText(file) {
   for (let i = 1; i <= Math.min(pdf.numPages, MAX_PAGES); i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    text += content.items.map(s => s.str).join(' ') + '
-';
+    text += content.items.map(s => s.str).join(' ') + '\n';
   }
   return text.trim();
 }
