@@ -1428,8 +1428,8 @@ body::before {
         <a href="/privacy.html">Privacy Policy</a> · <a href="/tos.html">Terms of Service</a>
       </p>
       <div class="cookie-btns">
-        <button class="cookie-decline" onclick="cookieChoice(false)" aria-label="Decline optional storage">Decline</button>
-        <button class="cookie-accept" onclick="cookieChoice(true)" aria-label="Accept and continue">Accept</button>
+        <button class="cookie-decline" id="cookieDeclineBtn" aria-label="Decline optional storage">Decline</button>
+        <button class="cookie-accept" id="cookieAcceptBtn" aria-label="Accept and continue">Accept</button>
       </div>
     </div>
 
@@ -2056,10 +2056,7 @@ function closeModal() {
   if (m) m.classList.remove('show');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const m = document.getElementById('upgradeModal');
-  if (m) m.addEventListener('click', e => { if (e.target === m) closeModal(); });
-});
+
 
 async function checkout(plan) {
   const plans = document.getElementById('modalPlans');
@@ -2112,9 +2109,6 @@ async function handlePaymentReturn() {
 }
 
 // ─── FILE HANDLING ────────────────────────────────────────────────────────────
-let selectedFile = null;
-const dropZone  = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
 
 function updateKeyStatus(val) {
   const ks = document.getElementById('keyStatus');
@@ -2404,6 +2398,16 @@ window.addEventListener('DOMContentLoaded', () => {
   initConsent();
   if (isRateLimited() && !isTokenValid()) showRateBanner();
   handlePaymentReturn();
+
+  // Wire cookie buttons safely after DOM is ready
+  const acceptBtn  = document.getElementById('cookieAcceptBtn');
+  const declineBtn = document.getElementById('cookieDeclineBtn');
+  if (acceptBtn)  acceptBtn.addEventListener('click',  () => cookieChoice(true));
+  if (declineBtn) declineBtn.addEventListener('click', () => cookieChoice(false));
+
+  // Wire upgrade modal overlay click
+  const modal = document.getElementById('upgradeModal');
+  if (modal) modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 });
 </script>
 </body>
