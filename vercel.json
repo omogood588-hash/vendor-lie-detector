@@ -28,7 +28,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://js.stripe.com https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.groq.com https://api.stripe.com https://vercel.live wss://vercel.live; img-src 'self' data: blob:; worker-src blob: https://cdnjs.cloudflare.com https://unpkg.com; frame-src https://js.stripe.com; frame-ancestors 'none';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://js.stripe.com https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.groq.com https://api.stripe.com https://vercel.live wss://vercel.live; img-src 'self' data: blob:; worker-src blob: https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net; frame-src https://js.stripe.com; frame-ancestors 'none';"
         }
       ]
     }
