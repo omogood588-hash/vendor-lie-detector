@@ -2,7 +2,7 @@
 // Vercel serverless functions are stateless but this works well enough
 // for limiting bursts — the map resets when the function cold-starts
 const ipMap = new Map();
-const IP_LIMIT  = 1;                // 1 free analysis per IP per day
+const IP_LIMIT  = 20;               // 20 requests per IP per day (raised for testing)
 const IP_WINDOW = 24 * 60 * 60 * 1000; // per day (ms)
 
 function isIPRateLimited(ip) {
