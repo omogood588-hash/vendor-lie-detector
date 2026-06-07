@@ -15,8 +15,10 @@
 <title>Vendor Lie Detector</title>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" crossorigin="anonymous"></script>
 <script src="https://js.stripe.com/v3/" async></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 :root {
   --paper: #f0ebe0;
@@ -2086,7 +2088,10 @@ async function checkout(plan) {
   } catch (e) {
     if (plans) plans.style.display = '';
     if (loading) loading.classList.remove('show');
-    showError('Checkout failed: ' + e.message);
+    // Show error inside modal instead of hiding it
+    const modalNote = document.querySelector('.modal-note');
+    if (modalNote) modalNote.innerHTML = '<span style="color:var(--red);font-size:0.72rem;">Error: ' + e.message + ' — check your Stripe key in Vercel settings.</span>';
+    console.error('Checkout error:', e);
   }
 }
 
