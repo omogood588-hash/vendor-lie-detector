@@ -1,24 +1,15 @@
-const CACHE_NAME = 'vld-v2';
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/app.html',
-  '/manifest.json',
-  '/icon-192.svg',
-  '/icon-512.svg'
-];
+const CACHE_NAME = 'vld-v3';
+const ASSETS = ['/', '/index.html', '/app.html', '/manifest.json'];
 
-// Install — cache only local assets
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return Promise.allSettled(ASSETS.map(a => cache.add(a)));
-    })
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.allSettled(ASSETS.map(a => cache.add(a)))
+    )
   );
   self.skipWaiting();
 });
 
-// Activate — clean old caches
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -28,17 +19,15 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// Fetch — only cache same-origin requests, pass everything else through
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
-  // Only handle same-origin GET requests
-  if (e.request.method !== 'GET' || url.origin !== self.location.origin) {
-    return; // let browser handle external requests normally
-  }
-
-  // Never cache API calls
-  if (url.pathname.startsWith('/api/')) {
+  // Only handle same-origin GET requests — let EVERYTHING else pass through untouched
+  if (
+    e.request.method !== 'GET' ||
+    url.origin !== self.location.origin ||
+    url.pathname.startsWith('/api/')
+  ) {
     return;
   }
 
@@ -46,7 +35,9 @@ self.addEventListener('fetch', e => {
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(res => {
-        if (res.status === 200) {
+        // Only cache successful same-origin HTML/JS/CSS responses
+        const type = res.headers.get('content-type') || '';
+        if (res.status === 200 && (type.includes('html') || type.includes('javascript') || type.includes('css'))) {
           const clone = res.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
         }
